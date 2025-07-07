@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEI Grupo de Estudos Iyamopo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f2ef;
+      color: #432417;
+    }
+    header {
+      background-color: #823d2c;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+    nav {
+      background-color: #a85b48;
+      text-align: center;
+      padding: 10px 0;
+      color: white;
+    }
+    .hero {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/2/23/African_children_and_woman.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
+    .hero h1 {
+      font-size: 2em;
+    }
+    .hero a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #823d2c;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .section {
+      padding: 40px 20px;
+    }
+   .sobre-nos-section {
+  background-color: #f9e5dd;
+  padding: 60px 20px;
+}
+
+.sobre-nos-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sobre-nos-texto {
+  flex: 1 1 500px;
+  max-width: 600px;
+  text-align: justify;
+  color: #5c2f1d;
+}
+
+.sobre-nos-texto h2 {
+  margin-top: 0;
+  color: #5c2f1d;
+}
+
+.sobre-nos-img {
+  flex: 0 0 200px;
+  max-width: 200px;
+  height: auto;
+}
+
+
+    .posts, .galeria, .depoimentos {
+      text-align: center;
+    }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .card {
+      width: 250px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      background-color: white;
+    }
+    .card img {
+      width: 100%;
+    }
+    .galeria img {
+      width: 200px;
+      height: auto;
+      margin: 10px;
+    }
+    .galeria-section {
+      background-color: #823d2c;
+      color: white;
+      padding: 40px 20px;
+    }
+    .galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  justify-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 10px;
+}
+
+.galeria img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.galeria img:hover {
+  transform: scale(1.03);
+}
+
+.galeria-section {
+  background-color: #823d2c;
+  color: white;
+  padding: 40px 20px;
+}
+.galeria-section h2 {
+  text-align: center;
+}    
+    .depoimentos p {
+      max-width: 600px;
+      margin: auto;
+    }
+
+ .popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #823d2c;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .popup-controls {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 15px;
+    left: 0;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  .popup-close,
+  .popup-expand {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .popup-img {
+    max-width: 90%;
+    max-height: 70vh;
+    border-radius: 10px;
+    margin-top: 60px;
+  }
+
+  .popup-description {
+    color: white;
+    font-size: 18px;
+    margin-top: 20px;
+    text-align: center;
+    max-width: 90%;
+  }
+
+  .popup-whatsapp {
+    margin-top: 10px;
+    background: #25d366;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    display: inline-block;
+  }
+    .whatsapp-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  background-color: #25D366;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+.whatsapp-button:hover {
+  transform: scale(1.1);
+}
+.whatsapp-button img {
+  width: 40px;
+  height: 40px;
+}
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #823d2c;
+  color: white;
+  z-index: 1000;
+  transition: top 0.3s;
+}
+
+.topbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.menu {
+  display: flex;
+  gap: 20px;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+.hero {
+  background-image: url('https://static.wixstatic.com/media/607130_3f89e2c810144f1eb60187b67d02c044~mv2.png/v1/fill/w_1024,h_609,al_c,q_90,enc_avif,quality_auto/607130_3f89e2c810144f1eb60187b67d02c044~mv2.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  text-align: center;
+  padding: 120px 20px 100px;
+}
+.hero a {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  color: white;
+  background-color: transparent;
+  border: 2px solid white;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.hero a:hover {
+  background-color: white;
+  color: #432417; /* ou #823d2c, se preferir */
+}
+.botao-conheca:hover {
+  background-color: #823d2c;
+  transition: background-color 0.3s;
+}
+
+.botao-conheca {
+  background-color: #5c2f1d;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 20px; /* Margem para afastar do texto */
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <span>GEI - Grupo de Estudos Iyamopo</span>
+  <nav class="topbar" id="topbar">
+  <div class="container">
+    <div class="logo">
+      <img src="logo.png" alt="" style="height: 40px; margin-right: 10px;">
+      <span><strong>GEI Grupo de Estudos Iyamopo</strong></span>
+    </div>
+    <div class="menu">
+      <a href="#">Página Inicial</a>
+      <a href="#">Blog</a>
+      <a href="#">Loja</a>
+      <a href="#">Portfólio</a>
+    </div>
+  </div>
+</nav>
+
+  </header>
+  <section class="hero">
+  <h1>Entenda e Aprenda Sobre Cultura Africana</h1>
+  <p>Descubra a riqueza da cultura africana conosco</p>
+  <a href="#">Saiba Mais</a>
+</section>
+
+<section class="sobre-nos-section">
+
+  <!-- BLOCO SOBRE NÓS -->
+  <div class="sobre-nos-container">
+    <img src="https://static.wixstatic.com/media/607130_1f824b0a9b3048bc80dea0f90dccc2fc~mv2.png/v1/crop/x_271,y_0,w_1535,h_1661/fill/w_414,h_606,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/caba%C3%A7a1-Photoroom_edited_edited_edited_e.png" alt="Peça africana esquerda" class="sobre-nos-img">
+    
+    <div class="sobre-nos-texto">
+      <h2>Sobre Nós:</h2>
+      <p>
+        O grupo que hoje chamamos de <strong>GEI</strong> (Grupo de Estudos Iyamopo) surgiu a partir de uma ideia há anos atrás: não era fácil (e acredito que ainda não seja) encontrar material confiável para pesquisa sobre temas ligados ao continente africano como: filosofia, arte, religião, cultura, etc..<br><br>
+        Em 2023, eu já pesquisava sobre arte e filosofia africana (principalmente iorubá) há pelo menos 10 anos, devido à necessidade na produção do Ateliê Iyamopo. Então convidei algumas pessoas para formar um grupo de pesquisa e ampliar assim os temas. Assim surgiu o Instituto Iyamopo e, agora em 2025, este grupo de pesquisa.
+      </p>
+      <p style="text-align: right;"><strong>Prof. Dr. Fábio Lopes</strong></p>
+    </div>
+    
+    <img src="https://static.wixstatic.com/media/607130_1e71c6abd469429089ee8d45ff7fa7a4~mv2.jpg/v1/crop/x_9,y_0,w_1732,h_1600/fill/w_656,h_630,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/C%C3%B3pia%20de%20IMG_5320_edited_edited.jpg" alt="Peça africana direita" class="sobre-nos-img">
+  </div>
+
+  <!-- BLOCO NOSSA MISSÃO -->
+  <div class="sobre-nos-container">
+    <img src="https://static.wixstatic.com/media/607130_acdeb22314044c48bf4009282a8d0064~mv2.jpg/v1/crop/x_72,y_0,w_894,h_1333/fill/w_450,h_672,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/OsunOsogbo-Photoroom_edited.jpg" alt="Peça africana esquerda missão" class="sobre-nos-img">
+    
+    <div class="sobre-nos-texto">
+      <h2>Nossa Missão:</h2>
+      <p>
+        O GEI Grupo de Estudos Iyamopo, sediado em São Paulo, tem como objetivo principal criar um site que funcione como galeria de arte e blog, com o intuito de promover e disseminar a cultura africana. Nossa plataforma oferecerá peças de cerâmica exclusivas, produzidas pelo Ateliê Iyamopo, enquanto o blog abordará temas como cultura, filosofia e religião dos povos africanos. Nosso foco está na produção de peças inspiradas na arte africana, em especial a iorubá, e na pesquisa de temas ligados à filosofia, cultura e religiões do povo africano.
+      </p>
+      <a href="#" class="botao-conheca">Conheça Mais</a>
+
+    </div>
+    
+    
+    <img src="https://static.wixstatic.com/media/607130_d4e20b8b523642ae8ab671cd090bcc19~mv2.jpg/v1/crop/x_144,y_211,w_1196,h_1590/fill/w_504,h_672,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/607130_d4e20b8b523642ae8ab671cd090bcc19~mv2.jpg" alt="Peça africana direita missão" class="sobre-nos-img">
+  </div>
+
+</section>
+
+
+
+  <section class="section posts">
+    <h2>Postagens Recentes</h2>
+    <div class="cards">
+      <div class="card">
+        <img src="https://static.wixstatic.com/media/607130_1273c70574fa462bb1987d4012f46b31~mv2.jpg/v1/fill/w_596,h_448,fp_0.50_0.50,lg_1,q_90,enc_avif,quality_auto/607130_1273c70574fa462bb1987d4012f46b31~mv2.jpg">
+        <div class="content">
+          <h4>FÁBIO LOPES</h4>
+          <p>Membro do GEI e Professor de Filosofia e Matemática...</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://static.wixstatic.com/media/607130_39f26db1b9e245f7a56e911ffaddcd8e~mv2.png/v1/fill/w_1024,h_768,fp_0.50_0.50,q_95,enc_avif,quality_auto/607130_39f26db1b9e245f7a56e911ffaddcd8e~mv2.png">
+        <div class="content">
+          <h4>SOCIEDADES AFRICANAS E O...</h4>
+          <p>O Grupo de Estudos Iyamopo (GEI) desenvolve pesquisas...</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://static.wixstatic.com/media/607130_40eecb8e897a42c5a62f87dcece163d2~mv2.png/v1/fill/w_1022,h_768,fp_0.50_0.50,q_95,enc_avif,quality_auto/607130_40eecb8e897a42c5a62f87dcece163d2~mv2.png">
+        <div class="content">
+          <h4>Conheça a galeria de arte do Gru...</h4>
+          <p>A galeria de arte do Grupo de Estudos Iyamopo...</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="galeria-section">
+    <h2>Galeria</h2>
+    <div class="galeria">
+      <img src="https://static.wixstatic.com/media/607130_1e71c6abd469429089ee8d45ff7fa7a4~mv2.jpg/v1/crop/x_9,y_0,w_1732,h_1600/fill/w_656,h_630,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/C%C3%B3pia%20de%20IMG_5320_edited_edited.jpg">
+      <img src="https://static.wixstatic.com/media/607130_1e71c6abd469429089ee8d45ff7fa7a4~mv2.jpg/v1/crop/x_9,y_0,w_1732,h_1600/fill/w_656,h_630,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/C%C3%B3pia%20de%20IMG_5320_edited_edited.jpg">
+      <img src="https://static.wixstatic.com/media/607130_1e71c6abd469429089ee8d45ff7fa7a4~mv2.jpg/v1/crop/x_9,y_0,w_1732,h_1600/fill/w_656,h_630,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/C%C3%B3pia%20de%20IMG_5320_edited_edited.jpg">
+      <img src="https://static.wixstatic.com/media/607130_1e71c6abd469429089ee8d45ff7fa7a4~mv2.jpg/v1/crop/x_9,y_0,w_1732,h_1600/fill/w_656,h_630,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/C%C3%B3pia%20de%20IMG_5320_edited_edited.jpg">
+      <img src="https://static.wixstatic.com/media/607130_1e71c6abd469429089ee8d45ff7fa7a4~mv2.jpg/v1/crop/x_9,y_0,w_1732,h_1600/fill/w_656,h_630,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/C%C3%B3pia%20de%20IMG_5320_edited_edited.jpg">
+      <img src="https://static.wixstatic.com/media/607130_1e71c6abd469429089ee8d45ff7fa7a4~mv2.jpg/v1/crop/x_9,y_0,w_1732,h_1600/fill/w_656,h_630,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/C%C3%B3pia%20de%20IMG_5320_edited_edited.jpg">
+    </div>
+    <div class="popup-overlay" id="popup">
+  <div class="popup-controls">
+    <button class="popup-expand">⤢</button>
+    <button class="popup-close" onclick="fecharPopup()">✕</button>
+  </div>
+
+  <img src="" class="popup-img" id="popup-img">
+  <div class="popup-description" id="popup-desc">Descrição</div>
+  <a class="popup-whatsapp" id="popup-whatsapp" target="_blank">Comprar no WhatsApp</a>
+</div>
+  </section>
+  <section class="section depoimentos">
+    <h2>Depoimentos</h2>
+    <p><strong>Maria Silva</strong><br>
+      Estou impressionada com a qualidade das peças oferecidas. Um verdadeiro mergulho na cultura africana.</p>
+    <div class="cards">
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/85/Clay_pots.jpg">
+        <div class="content">
+          <strong>João Santos</strong>
+          <p>Uma experiência enriquecedora. As peças são únicas e representam a alma africana.</p>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Clay_pots_2.jpg">
+        <div class="content">
+          <strong>Ana Oliveira</strong>
+          <p>Adorei conhecer mais sobre a história da arte africana. Recomendo!</p>
+        </div>
+      </div>
+      <a href="https://wa.me/5599999999999" class="whatsapp-button" target="_blank" title="Fale conosco no WhatsApp">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+</a>
+
+    </div>
+  </section>
+</body>
+</html>
+
+<script>
+  let lastScrollTop = 0;
+  const topbar = document.getElementById("topbar");
+  window.addEventListener("scroll", function () {
+    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    if (currentScroll > lastScrollTop) {
+      topbar.style.top = "-80px"; // esconde
+    } else {
+      topbar.style.top = "0"; // mostra
+    }
+    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+  });
+</script>
+
+<script>
+  const imagens = document.querySelectorAll('.galeria img');
+  const popup = document.getElementById('popup');
+  const popupImg = document.getElementById('popup-img');
+  const popupDesc = document.getElementById('popup-desc');
+  const popupWhats = document.getElementById('popup-whatsapp');
+
+  imagens.forEach(img => {
+    img.addEventListener('click', () => {
+      const src = img.src;
+      const descricao = img.getAttribute('data-descricao') || 'Peça sem descrição';
+      popup.style.display = 'flex';
+      popupImg.src = src;
+      popupDesc.textContent = descricao;
+      popupWhats.href = `https://wa.me/?text=Olá, tenho interesse nesta peça: ${encodeURIComponent(src)}`;
+    });
+  });
+
+  function fecharPopup() {
+    popup.style.display = 'none';
+  }
+</script>
+
+
+
+
