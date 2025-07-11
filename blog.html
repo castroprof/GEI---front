@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog - GEI Grupo de Estudos Iyamopo</title>
+  <link rel="stylesheet" href="navbar.css">
+  <style>
+    body {
+      background-color: #823d2c;
+      color: #432417;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding-top: 70px; /* espaço para a topbar fixa */
+    }
+
+    /* === NAVBAR IGUAL AO INDEX === */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #823d2c;
+      color: white;
+      z-index: 1000;
+      transition: top 0.3s;
+    }
+
+    .topbar .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+    }
+
+    .logo img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .menu {
+      display: flex;
+      gap: 20px;
+    }
+
+    .menu a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .menu a.active {
+      text-decoration: underline;
+    }
+
+    /* === SEARCH BAR === */
+    .search-bar {
+      display: flex;
+      max-width: 600px;
+      margin: 40px auto 30px auto;
+      background-color: #823d2c;
+      border-radius: 4px;
+      padding: 8px 12px;
+      align-items: center;
+    }
+
+    .search-bar input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .search-bar button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    /* === POSTS === */
+    .posts-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      padding-bottom: 100px; /* espaço extra no final */
+    }
+
+    .post {
+      display: flex;
+      background-color: #fff;
+      border: 1px solid #823d2c;
+      border-radius: 0;
+      overflow: hidden;
+      color: #823d2c;
+      box-shadow: 0 0 6px rgba(130, 61, 44, 0.1);
+    }
+
+    .post-content {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .post-content h3 {
+      margin-top: 0;
+    }
+
+    .post-content p {
+      color: #5a3b29;
+    }
+
+    .post-meta {
+      font-size: 0.85rem;
+      color: #a67b64;
+    }
+
+    .post-stats {
+      display: flex;
+      gap: 15px;
+      font-size: 0.85rem;
+    }
+
+    .post-image {
+      width: 280px;
+      object-fit: cover;
+    }
+
+    /* === WHATSAPP FIXO === */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25d366;
+      color: white;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      cursor: pointer;
+      text-decoration: none;
+      z-index: 1000;
+    }
+
+    .whatsapp-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  background-color: #25D366;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+.whatsapp-button:hover {
+  transform: scale(1.1);
+}
+.whatsapp-button img {
+  width: 40px;
+  height: 40px;
+}
+
+
+    @media (max-width: 768px) {
+      .post {
+        flex-direction: column;
+      }
+
+      .post-image {
+        width: 100%;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR FIXA -->
+  <nav class="topbar" id="topbar">
+    <div class="container">
+      <div class="logo">
+        <span><strong>GEI Grupo de Estudos Iyamopo</strong></span>
+      </div>
+      <div class="menu">
+        <a href="index.html">Página Inicial</a>
+      <a href="blog.html">Blog</a>
+      <a href="loja.html">Loja</a>
+      <a href="portifolio.html">Portfólio</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BARRA DE PESQUISA -->
+  <form class="search-bar" onsubmit="event.preventDefault(); alert('Busca ainda não implementada');">
+    <input type="search" placeholder="Buscar no blog..." />
+    <button type="submit" style="background: none; border: none; cursor: pointer;">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search">
+    <circle cx="11" cy="11" r="8"></circle>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+  </svg>
+</button>
+  </form>
+
+  <!-- POSTS -->
+  <section class="posts-container">
+    <article class="post">
+      <div class="post-content">
+        <h3>FÁBIO LOPES</h3>
+        <p>Membro do GEI e Professor de Física e Matemática do Ensino Superior desde 2007. Mestre em Ensino de Ciências e Doutor em Física Aplicada...</p>
+        <div class="post-meta">Iyamopo Cerâmica • 4 de jun. • 2 min</div>
+        <div class="post-stats">
+          <span>❤️ 0</span>
+          <span>💬 0</span>
+          <span>👁 6</span>
+        </div>
+      </div>
+      <img class="post-image" src="https://static.wixstatic.com/media/607130_1273c70574fa462bb1987d4012f46b31~mv2.jpg" alt="Fábio Lopes">
+    </article>
+
+    <article class="post">
+      <div class="post-content">
+        <h3>SOCIEDADES AFRICANAS E O CONCEITO DE GÊNERO</h3>
+        <p>O Grupo de Estudos Iyamopo (GEI) pretende explorar temas como cultura, filosofia e religião dos povos africanos...</p>
+        <div class="post-meta">Iyamopo Cerâmica • 4 de jun. • 1 min</div>
+        <div class="post-stats">
+          <span>❤️ 0</span>
+          <span>💬 0</span>
+          <span>👁 9</span>
+        </div>
+      </div>
+      <img class="post-image" src="https://static.wixstatic.com/media/607130_39f26db1b9e245f7a56e911ffaddcd8e~mv2.png" alt="Sociedades Africanas">
+    </article>
+
+    <article class="post">
+      <div class="post-content">
+        <h3>GALERIA DE ARTE DO GEI</h3>
+        <p>A galeria de arte do Grupo de Estudos Iyamopo é um novo espaço online que visa promover a diversidade da cultura africana...</p>
+        <div class="post-meta">Iyamopo Cerâmica • 31 de mai. • 1 min</div>
+        <div class="post-stats">
+          <span>❤️ 0</span>
+          <span>💬 0</span>
+          <span>👁 6</span>
+        </div>
+      </div>
+      <img class="post-image" src="https://static.wixstatic.com/media/607130_40eecb8e897a42c5a62f87dcece163d2~mv2.png" alt="Galeria de Arte">
+    </article>
+  </section>
+
+  <!-- WHATSAPP FIXO -->
+  <a class="whatsapp-button" href="https://wa.me/55SEUNUMERO" target="_blank">
+  <img src="https://imagepng.org/wp-content/uploads/2017/08/whatsapp-icone-1.png" alt="WhatsApp">
+</a>
+
+  <script>
+    // Navbar fixa esconde/mostra ao rolar
+    let lastScrollTop = 0;
+    const topbar = document.getElementById("topbar");
+    window.addEventListener("scroll", function () {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      if (currentScroll > lastScrollTop) {
+        topbar.style.top = "-80px";
+      } else {
+        topbar.style.top = "0";
+      }
+      lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    });
+  </script>
+
+</body>
+</html>

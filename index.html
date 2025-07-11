@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GEI Grupo de Estudos Iyamopo</title>
+  <link rel="stylesheet" href="css/navbar.css">
   <style>
     body {
       margin: 0;
@@ -85,21 +86,39 @@
       text-align: center;
     }
     .cards {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-    }
-    .card {
-      width: 250px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      overflow: hidden;
-      background-color: white;
-    }
-    .card img {
-      width: 100%;
-    }
+  display: flex;
+  justify-content: center; /* centraliza os cards na linha */
+  gap: 20px;               /* espaçamento entre os cards */
+  flex-wrap: wrap;         /* quebra linha quando não cabe mais */
+}
+
+.card {
+  display: block;
+  width: 350px; /* maior que antes */
+  text-decoration: none;
+  color: #823d2c; /* cor do texto */
+  border: 1px solid #823d2c; /* borda fina na cor pedida */
+  border-radius: 0; /* borda quadrada */
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  background-color: #fff; /* para garantir fundo branco */
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(130, 61, 44, 0.3); /* sombra suave na mesma cor */
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.content {
+  padding: 15px 20px; /* um pouco mais de espaço interno */
+}
+
     .galeria img {
       width: 200px;
       height: auto;
@@ -227,42 +246,6 @@
   width: 40px;
   height: 40px;
 }
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #823d2c;
-  color: white;
-  z-index: 1000;
-  transition: top 0.3s;
-}
-
-.topbar .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-}
-
-.menu {
-  display: flex;
-  gap: 20px;
-}
-
-.menu a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
 .hero {
   background-image: url('https://static.wixstatic.com/media/607130_3f89e2c810144f1eb60187b67d02c044~mv2.png/v1/fill/w_1024,h_609,al_c,q_90,enc_avif,quality_auto/607130_3f89e2c810144f1eb60187b67d02c044~mv2.png');
   background-size: cover;
@@ -303,6 +286,76 @@
   display: inline-block;
   margin-top: 20px; /* Margem para afastar do texto */
 }
+.depoimentos {
+  background-color: #f3ddd4;
+  text-align: center;
+  padding: 60px 20px;
+  color: #823d2c;
+}
+
+.depoimentos h2 {
+  margin-bottom: 40px;
+  font-size: 28px;
+}
+
+.depoimentos-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: nowrap;
+  position: relative;
+}
+
+.depoimento-card {
+  background-color: white;
+  padding: 30px 20px;
+  width: 350px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  text-align: center;
+  display: none;
+  flex-shrink: 0;
+}
+
+.depoimento-card.ativo {
+  display: block;
+}
+
+.depoimento-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.depoimento-card strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #823d2c;
+}
+
+.depoimento-card p {
+  font-size: 16px;
+  color: #5c2f1d;
+}
+
+.carousel-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #823d2c;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.3s;
+}
+
+.carousel-btn:hover {
+  transform: scale(1.2);
+}
+
 
   </style>
 </head>
@@ -316,10 +369,10 @@
       <span><strong>GEI Grupo de Estudos Iyamopo</strong></span>
     </div>
     <div class="menu">
-      <a href="#">Página Inicial</a>
-      <a href="#">Blog</a>
-      <a href="#">Loja</a>
-      <a href="#">Portfólio</a>
+      <a href="index.html">Página Inicial</a>
+      <a href="blog.html">Blog</a>
+      <a href="loja.html">Loja</a>
+      <a href="portifolio.html">Portfólio</a>
     </div>
   </div>
 </nav>
@@ -371,31 +424,31 @@
 
 
   <section class="section posts">
-    <h2>Postagens Recentes</h2>
-    <div class="cards">
-      <div class="card">
-        <img src="https://static.wixstatic.com/media/607130_1273c70574fa462bb1987d4012f46b31~mv2.jpg/v1/fill/w_596,h_448,fp_0.50_0.50,lg_1,q_90,enc_avif,quality_auto/607130_1273c70574fa462bb1987d4012f46b31~mv2.jpg">
-        <div class="content">
-          <h4>FÁBIO LOPES</h4>
-          <p>Membro do GEI e Professor de Filosofia e Matemática...</p>
-        </div>
+  <h2>Postagens Recentes</h2>
+  <div class="cards">
+    <a href="blog.html" class="card">
+      <img src="https://static.wixstatic.com/media/607130_1273c70574fa462bb1987d4012f46b31~mv2.jpg/v1/fill/w_596,h_448,fp_0.50_0.50,lg_1,q_90,enc_avif,quality_auto/607130_1273c70574fa462bb1987d4012f46b31~mv2.jpg" alt="Fábio Lopes">
+      <div class="content">
+        <h4>FÁBIO LOPES</h4>
+        <p>Membro do GEI e Professor de Filosofia e Matemática...</p>
       </div>
-      <div class="card">
-        <img src="https://static.wixstatic.com/media/607130_39f26db1b9e245f7a56e911ffaddcd8e~mv2.png/v1/fill/w_1024,h_768,fp_0.50_0.50,q_95,enc_avif,quality_auto/607130_39f26db1b9e245f7a56e911ffaddcd8e~mv2.png">
-        <div class="content">
-          <h4>SOCIEDADES AFRICANAS E O...</h4>
-          <p>O Grupo de Estudos Iyamopo (GEI) desenvolve pesquisas...</p>
-        </div>
+    </a>
+    <a href="blog.html" class="card">
+      <img src="https://static.wixstatic.com/media/607130_39f26db1b9e245f7a56e911ffaddcd8e~mv2.png/v1/fill/w_1024,h_768,fp_0.50_0.50,q_95,enc_avif,quality_auto/607130_39f26db1b9e245f7a56e911ffaddcd8e~mv2.png" alt="Sociedades Africanas">
+      <div class="content">
+        <h4>SOCIEDADES AFRICANAS E O...</h4>
+        <p>O Grupo de Estudos Iyamopo (GEI) desenvolve pesquisas...</p>
       </div>
-      <div class="card">
-        <img src="https://static.wixstatic.com/media/607130_40eecb8e897a42c5a62f87dcece163d2~mv2.png/v1/fill/w_1022,h_768,fp_0.50_0.50,q_95,enc_avif,quality_auto/607130_40eecb8e897a42c5a62f87dcece163d2~mv2.png">
-        <div class="content">
-          <h4>Conheça a galeria de arte do Gru...</h4>
-          <p>A galeria de arte do Grupo de Estudos Iyamopo...</p>
-        </div>
+    </a>
+    <a href="blog.html" class="card">
+      <img src="https://static.wixstatic.com/media/607130_40eecb8e897a42c5a62f87dcece163d2~mv2.png/v1/fill/w_1022,h_768,fp_0.50_0.50,q_95,enc_avif,quality_auto/607130_40eecb8e897a42c5a62f87dcece163d2~mv2.png" alt="Galeria de Arte">
+      <div class="content">
+        <h4>Conheça a galeria de arte do Gru...</h4>
+        <p>A galeria de arte do Grupo de Estudos Iyamopo...</p>
       </div>
-    </div>
-  </section>
+    </a>
+  </div>
+</section>
   <section class="galeria-section">
     <h2>Galeria</h2>
     <div class="galeria">
@@ -418,46 +471,31 @@
 </div>
   </section>
   <section class="section depoimentos">
-    <h2>Depoimentos</h2>
-    <p><strong>Maria Silva</strong><br>
-      Estou impressionada com a qualidade das peças oferecidas. Um verdadeiro mergulho na cultura africana.</p>
-    <div class="cards">
-      <div class="card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/85/Clay_pots.jpg">
-        <div class="content">
-          <strong>João Santos</strong>
-          <p>Uma experiência enriquecedora. As peças são únicas e representam a alma africana.</p>
-        </div>
-      </div>
-      <div class="card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Clay_pots_2.jpg">
-        <div class="content">
-          <strong>Ana Oliveira</strong>
-          <p>Adorei conhecer mais sobre a história da arte africana. Recomendo!</p>
-        </div>
-      </div>
-      <a href="https://wa.me/5599999999999" class="whatsapp-button" target="_blank" title="Fale conosco no WhatsApp">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
-</a>
+  <h2>Depoimentos</h2>
+  <div class="depoimentos-carousel">
+    <button class="carousel-btn prev" onclick="mudarSlide(-1)">←</button>
 
+    <div class="depoimento-card ativo">
+      <img src="https://static.wixstatic.com/media/607130_e8193a495a114b13a58b3e0407b80236~mv2.png" alt="Foto de Pedro Costa">
+      <strong>Pedro Costa</strong>
+      <p>A coleção é simplesmente magnífica. <br>Cada peça conta uma história fascinante.</p>
     </div>
-  </section>
+
+    <div class="depoimento-card">
+      <img src="https://static.wixstatic.com/media/607130_6253dd2241da46c993d798641291d1ae~mv2.png" alt="Foto de Mariana Pereira">
+      <strong>Mariana Pereira</strong>
+      <p>Fascinante! As peças são verdadeiras obras de arte que refletem a autenticidade da cultura africana.</p>
+    </div>
+
+    <button class="carousel-btn next" onclick="mudarSlide(1)">→</button>
+  </div>
+</section>
+<a class="whatsapp-button" href="https://wa.me/55SEUNUMERO" target="_blank">
+  <img src="https://imagepng.org/wp-content/uploads/2017/08/whatsapp-icone-1.png" alt="WhatsApp">
+</a>
+<script src="js/navbar.js"></script>
 </body>
 </html>
-
-<script>
-  let lastScrollTop = 0;
-  const topbar = document.getElementById("topbar");
-  window.addEventListener("scroll", function () {
-    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-    if (currentScroll > lastScrollTop) {
-      topbar.style.top = "-80px"; // esconde
-    } else {
-      topbar.style.top = "0"; // mostra
-    }
-    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-  });
-</script>
 
 <script>
   const imagens = document.querySelectorAll('.galeria img');
@@ -480,6 +518,26 @@
   function fecharPopup() {
     popup.style.display = 'none';
   }
+</script>
+<script>
+  let slideAtual = 0;
+  const slides = document.querySelectorAll('.depoimento-card');
+
+  function mostrarSlide(index) {
+    slides.forEach((s, i) => {
+      s.classList.remove('ativo');
+      if (i === index) s.classList.add('ativo');
+    });
+  }
+
+  function mudarSlide(direcao) {
+    slideAtual += direcao;
+    if (slideAtual >= slides.length) slideAtual = 0;
+    if (slideAtual < 0) slideAtual = slides.length - 1;
+    mostrarSlide(slideAtual);
+  }
+
+  mostrarSlide(slideAtual); // inicializa com o primeiro
 </script>
 
 
