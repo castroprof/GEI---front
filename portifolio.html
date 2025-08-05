@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfólio - Projeto</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #823d2c;
+      color: white;
+    }
+
+    .topbar {
+      background-color: #763224;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .topbar .logo {
+      display: flex;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .topbar .menu a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+    }
+
+    .project-container {
+      padding: 100px 20px 40px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .project-info {
+      margin-bottom: 40px;
+    }
+
+    .project-info h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .project-info p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #e5cfc5;
+    }
+
+    .project-details {
+      font-size: 15px;
+      margin-bottom: 30px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 80vh;
+      border-radius: 10px;
+    }
+
+    .lightbox .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <nav class="topbar">
+    <div class="logo">GEI Grupo de Estudos Iyamopo</div>
+    <div class="menu">
+      <a href="index.html">Página Inicial</a>
+      <a href="blog.html">Blog</a>
+      <a href="loja.html">Loja</a>
+      <a href="portifolio.html">Portfólio</a>
+    </div>
+  </nav>
+
+  <div class="project-container">
+    <div class="project-info">
+      <h1>Título do projeto</h1>
+      <div class="project-details">
+        <p><strong>Tipo de projeto:</strong> Fotografia</p>
+        <p><strong>Data:</strong> Abril 2023</p>
+      </div>
+      <p>Aqui ficará a descrição do projeto. Dê uma visão geral ou se aprofunde ao apresentá-lo. Conte sobre o que se trata, o que o inspirou, como você o criou ou alguma outra informação que você gostaria que os visitantes soubessem.</p>
+    </div>
+
+    <div class="gallery">
+      <img src="https://i.imgur.com/JxqZJ1e.png" alt="Foto 1">
+      <img src="https://i.imgur.com/4fsrjEh.png" alt="Foto 2">
+      <img src="https://i.imgur.com/V7RqxA2.png" alt="Foto 3">
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <span class="close-btn" onclick="closeLightbox()">&times;</span>
+    <img id="lightbox-img" src="" alt="Imagem Ampliada">
+  </div>
+
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const galleryImages = document.querySelectorAll('.gallery img');
+
+    galleryImages.forEach(img => {
+      img.addEventListener('click', () => {
+        lightbox.style.display = 'flex';
+        lightboxImg.src = img.src;
+      });
+    });
+
+    function closeLightbox() {
+      lightbox.style.display = 'none';
+      lightboxImg.src = '';
+    }
+  </script>
+</body>
+</html>
