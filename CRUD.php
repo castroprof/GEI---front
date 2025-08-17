@@ -92,18 +92,20 @@ if(isset($_POST['action']) && $_POST['action']=='save'){
             break;
 
         case 'galeria':
-            $title = $_POST['title'] ?? '';
-            $image = uploadImage('image');
-            if($id){
-                $stmt = $conn->prepare("UPDATE galeria SET title=?, image=? WHERE id=?");
-                $stmt->bind_param("ssi",$title,$image,$id);
-            } else {
-                $stmt = $conn->prepare("INSERT INTO galeria (title,image) VALUES (?,?)");
-                $stmt->bind_param("ss",$title,$image);
-            }
-            $stmt->execute();
-            $stmt->close();
-            break;
+    $title = $_POST['title'] ?? '';
+    $description = $_POST['description'] ?? ''; // Novo campo
+    $image = uploadImage('image');
+    if($id){
+        $stmt = $conn->prepare("UPDATE galeria SET title=?, description=?, image=? WHERE id=?");
+        $stmt->bind_param("sssi",$title,$description,$image,$id);
+    } else {
+        $stmt = $conn->prepare("INSERT INTO galeria (title, description, image) VALUES (?,?,?)");
+        $stmt->bind_param("sss",$title,$description,$image);
+    }
+    $stmt->execute();
+    $stmt->close();
+    break;
+
 
         case 'hero':
             $title = $_POST['title'] ?? '';
@@ -252,14 +254,21 @@ foreach($secoes as $sec=>$cols){
     echo '<input type="hidden" name="action" value="save">';
     echo '<input type="hidden" name="section" value="'.$sec.'">';
     foreach($cols as $col){
-        $label = ucfirst(str_replace('_',' ',$col));
-        echo '<label>'.$label.'</label>';
-        if($col=='text'){
-            echo '<textarea name="'.$col.'" id="'.$sec.'-'.$col.'" required></textarea>';
-        } else {
-            echo '<input type="text" name="'.$col.'" id="'.$sec.'-'.$col.'" required>';
-        }
+    $label = ucfirst(str_replace('_',' ',$col));
+    echo '<label>'.$label.'</label>';
+
+    if(in_array($col, ['image'])){
+        echo '<input type="file" name="image" id="'.$sec.'-image">';
+        echo '<input type="hidden" name="image_old" id="'.$sec.'-image_old">';
     }
+    elseif($col=='description' || $col=='text'){
+        echo '<textarea name="'.$col.'" id="'.$sec.'-'.$col.'" required></textarea>';
+    } else {
+        echo '<input type="text" name="'.$col.'" id="'.$sec.'-'.$col.'" required>';
+    }
+}
+
+
     echo '<button type="submit" class="btn btn-primary">Salvar</button>';
     echo '<button type="button" class="btn btn-secondary cancel-btn">Cancelar</button>';
     echo '</form>';
