@@ -1,7 +1,5 @@
 <?php
 session_start();
-
-// Ativa exibição de erros
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -59,7 +57,6 @@ if(isset($_POST['action']) && $_POST['action']=='save'){
             if($id){
                 $stmt = $conn->prepare("UPDATE depoimentos SET name=?, text=? WHERE id=?");
                 $stmt->bind_param("ssi",$name,$text,$id);
-                
             } else {
                 $stmt = $conn->prepare("INSERT INTO depoimentos (name,text) VALUES (?,?)");
                 $stmt->bind_param("ss",$name,$text);
@@ -189,7 +186,7 @@ if(isset($_POST['action']) && $_POST['action']=='save'){
             break;
     }
 
-    header("Location: ".$_SERVER['PHP_SELF']);
+    header("Location: ".$_SERVER['PHP_SELF']."?section=".$section);
     exit;
 }
 
@@ -198,7 +195,7 @@ if(isset($_GET['action']) && $_GET['action']=='delete'){
     $section = $_GET['section'];
     $id = intval($_GET['id']);
     $conn->query("DELETE FROM $section WHERE id=$id");
-    header("Location: ".$_SERVER['PHP_SELF']);
+    header("Location: ".$_SERVER['PHP_SELF']."?section=".$section);
     exit;
 }
 
@@ -235,6 +232,9 @@ $secoes = [
     'integrantes'=>['nome','descricao','imagem'],
     'portfolio'=>['title','description','image'],
 ];
+
+// Aba ativa via GET
+$activeSection = $_GET['section'] ?? 'posts';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -243,47 +243,69 @@ $secoes = [
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Painel Administrativo - GEI</title>
 <style>
-body {font-family:sans-serif;margin:0;padding:0;background:#f9f9f9;}
-nav{background:#823d2c;color:#fff;padding:10px;display:flex;gap:5px;flex-wrap:wrap;}
-nav button{background:#b55c44;color:#fff;border:none;padding:8px 12px;cursor:pointer;border-radius:5px;transition: background 0.3s;}
-nav button.active{background:#fff;color:#823d2c;font-weight:bold;}
-.section{padding:20px;display:none;background:#fff;margin:10px;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+/* RESET E TIPOGRAFIA */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', sans-serif;}
+body{background:#f4f6f8;color:#333;}
+
+/* NAVEGAÇÃO */
+nav{display:flex;gap:10px;padding:15px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.1);border-radius:0 0 10px 10px;flex-wrap:wrap;}
+nav button{padding:10px 16px;cursor:pointer;border-radius:8px;border:none;background:#e0e0e0;color:#333;font-weight:600;transition:0.3s;}
+nav button.active{background:#823d2c;color:#fff;box-shadow:0 4px 12px rgba(130,61,44,0.3);}
+nav button:hover{background:#d5d5d5;}
+
+/* SEÇÕES */
+.section{display:none;background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.05);margin-bottom:20px;transition:all 0.3s;}
 .section.active{display:block;}
-table{width:100%;border-collapse:collapse;margin-top:15px;}
-th,td{border:1px solid #ccc;padding:8px;text-align:left;}
-th{background:#f5f5f5;}
-.btn{padding:6px 12px;margin:2px;cursor:pointer;border-radius:5px;transition:0.3s;}
-.btn-primary{background:#823d2c;color:#fff;border:none;}
-.btn-primary:hover{background:#5a2b1f;}
-.btn-secondary{background:#555;color:#fff;border:none;}
-.btn-secondary:hover{background:#333;}
-.btn-danger{background:#dc3545;color:#fff;border:none;}
-.btn-danger:hover{background:#a71d2a;}
-form{margin-bottom:15px;}
-form input, form textarea, form select{display:block;width:100%;margin-bottom:8px;padding:8px;border-radius:5px;border:1px solid #ccc;box-sizing:border-box;}
-form textarea{resize:none;}
-img.preview{width:150px;height:100px;object-fit:cover;border-radius:6px;margin-bottom:8px;}
-#new-category-container{display:none;}
+
+/* TABELA */
+table{width:100%;border-collapse:separate;border-spacing:0 8px;margin-top:15px;}
+th, td{padding:12px 15px;text-align:left;}
+th{background:#f0f0f0;color:#555;font-weight:600;border-radius:8px 8px 0 0;}
+tbody tr{background:#fff;transition:0.3s;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+tbody tr:hover{background:#fef9f7;}
+td img{width:80px;height:60px;object-fit:cover;border-radius:6px;}
+
+/* BOTÕES */
+.btn{padding:8px 14px;cursor:pointer;border-radius:8px;font-weight:600;transition:0.3s;border:none;}
+.btn-primary{background:#28a745;color:#fff;}
+.btn-primary:hover{background:#218838;}
+.btn-secondary{background:#ffc107;color:#333;}
+.btn-secondary:hover{background:#e0a800;}
+.btn-danger{background:#dc3545;color:#fff;}
+.btn-danger:hover{background:#a71d2a;transform:translateY(-2px);}
+
+/* FORMULÁRIOS */
+form{margin-top:15px;background:#f9f9f9;padding:20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+form label{display:block;margin-bottom:6px;font-weight:600;color:#555;}
+form input, form textarea, form select{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;margin-bottom:12px;transition:0.3s;}
+form input:focus, form textarea:focus, form select:focus{border-color:#823d2c;outline:none;background:#fff;}
+form textarea{resize:vertical;min-height:80px;}
+
+/* Preview de imagem */
+img.preview{width:150px;height:100px;object-fit:cover;border-radius:8px;margin-top:8px;display:none;}
+
+/* Categoria nova */
+#new-category-container{display:none;margin-bottom:12px;}
 </style>
 </head>
 <body>
 
 <nav>
   <?php foreach($secoes as $sec=>$cols): ?>
-    <button data-section="<?= $sec ?>"><?= ucfirst(str_replace('_',' ',$sec)) ?></button>
+    <button data-section="<?= $sec ?>" class="<?= $sec==$activeSection?'active':'' ?>"><?= ucfirst(str_replace('_',' ',$sec)) ?></button>
   <?php endforeach; ?>
 </nav>
 
 <main>
 <?php
 foreach($secoes as $sec=>$cols){
-    echo '<section id="'.$sec.'" class="section '.($sec=='posts'?'active':'').'">';
+    echo '<section id="'.$sec.'" class="section '.($sec==$activeSection?'active':'').'">';
     echo '<button id="btn-add-'.$sec.'" class="btn btn-primary">Adicionar</button>';
     echo '<form id="form-'.$sec.'" style="display:none;" method="POST" enctype="multipart/form-data">';
     echo '<input type="hidden" name="id" id="'.$sec.'-id">';
     echo '<input type="hidden" name="action" value="save">';
     echo '<input type="hidden" name="section" value="'.$sec.'">';
-
+    
     if($sec == 'sobre_nos'){
         echo '<label>Texto 1</label><textarea name="text1" required></textarea>';
         echo '<label>Texto 2</label><textarea name="text2" required></textarea>';
@@ -291,7 +313,7 @@ foreach($secoes as $sec=>$cols){
             echo '<label>Imagem '.$i.'</label>';
             echo '<input type="file" name="img'.$i.'">';
             echo '<input type="hidden" name="img'.$i.'_old">';
-            echo '<img src="" class="preview" style="display:none;">';
+            echo '<img src="" class="preview">';
         }
     } else {
         foreach($cols as $col){
@@ -300,7 +322,7 @@ foreach($secoes as $sec=>$cols){
             if($col == 'image' || $col == 'imagem'){
                 echo '<input type="file" name="'.$col.'">';
                 echo '<input type="hidden" name="'.$col.'_old">';
-                echo '<img src="" class="preview" style="display:none;">';
+                echo '<img src="" class="preview">';
             } elseif($col=='description' || $col=='text' || $col=='descricao'){
                 echo '<textarea name="'.$col.'" required></textarea>';
             } elseif($col=='category'){
@@ -345,95 +367,58 @@ function setupForm(section){
   const btnAdd = document.getElementById('btn-add-'+section);
   const form = document.getElementById('form-'+section);
   const cancel = form.querySelector('.cancel-btn');
+  btnAdd.addEventListener('click',()=>{
+    form.style.display='block';
+    form.scrollIntoView({behavior:"smooth"});
+    form.reset();
+    form.querySelectorAll('.preview').forEach(p=>p.style.display='none');
+  });
+  cancel.addEventListener('click',()=>{form.style.display='none';});
 
-  if(btnAdd){
-    btnAdd.addEventListener('click',()=>{
-      form.style.display='block';
-      form.reset();
-      form.querySelector('input[name="id"]').value='';
-      form.querySelectorAll('img.preview').forEach(img=>img.style.display='none');
-      form.querySelectorAll('input[type="hidden"][name$="_old"]').forEach(h=>h.value='');
-      const newCatCont = form.querySelector('#new-category-container');
-      if(newCatCont) newCatCont.style.display='none';
+  form.querySelectorAll('input[type=file]').forEach(input=>{
+    input.addEventListener('change',e=>{
+      const file = e.target.files[0];
+      if(file){
+        const preview = input.parentElement.querySelector('.preview');
+        preview.src = URL.createObjectURL(file);
+        preview.style.display='block';
+      }
     });
-  }
+  });
 
-  cancel.addEventListener('click',()=> form.style.display='none');
-}
-
-<?php foreach(array_keys($secoes) as $s): ?>
-setupForm('<?= $s ?>');
-<?php endforeach; ?>
-
-// Mostrar input nova categoria
-document.querySelectorAll('select[name="category"]').forEach(sel=>{
+  form.querySelectorAll('select[name=category]').forEach(sel=>{
     sel.addEventListener('change',()=>{
-        const container = sel.closest('form').querySelector('#new-category-container');
-        if(sel.value === 'add_new') container.style.display='block';
-        else container.style.display='none';
+      const container = form.querySelector('#new-category-container');
+      if(sel.value=='add_new'){container.style.display='block';}else{container.style.display='none';}
     });
-});
-
-// Editar registros
-document.querySelectorAll('.btn-edit').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-        const section = btn.dataset.section;
-        const tr = btn.closest('tr');
-        const form = document.getElementById('form-'+section);
-        form.style.display = 'block';
-        form.querySelector('input[name="id"]').value = tr.dataset.id;
-
-        const fields = Array.from(form.querySelectorAll('input:not([type=file]):not([type=hidden]), textarea, select'));
-const tds = tr.querySelectorAll('td');
-let fieldIndex = 0;
-
-for (let i = 0; i < tds.length - 1; i++) { // ignora o último (Ações)
-    const td = tds[i];
-    const input = fields[fieldIndex];
-    const fieldName = input?.name;
-
-    if (!input || !fieldName) continue;
-
-    if (input.tagName === 'TEXTAREA') {
-        input.value = td.textContent.trim();
-    } else if (input.tagName === 'SELECT') {
-        const val = td.textContent.trim();
-        let found = false;
-        for (let opt of input.options) {
-            if (opt.value === val) {
-                opt.selected = true;
-                found = true;
-                break;
-            }
-        }
-        if (!found && input.name === 'category') {
-            const newCatInput = form.querySelector('input[name="new_category"]');
-            if (newCatInput) {
-                newCatInput.value = val;
-                const container = form.querySelector('#new-category-container');
-                if (container) container.style.display = 'block';
-            }
-        }
-    } else if (input.type === 'text' || input.type === 'number') {
-        input.value = td.textContent.trim();
-    }
-
-    // Se for imagem, atualiza a prévia e o campo _old
-    if (td.querySelector('img')) {
-        const imgSrc = td.querySelector('img').src;
-        const preview = form.querySelectorAll('img.preview')[fieldIndex];
-        const hiddenOld = form.querySelector(`input[name="${fieldName}_old"]`);
-        if (preview && hiddenOld) {
-            preview.src = imgSrc;
-            preview.style.display = 'block';
-            hiddenOld.value = imgSrc;
-        }
-    }
-
-    fieldIndex++;
+  });
 }
 
+<?php foreach($secoes as $sec=>$cols){echo "setupForm('$sec');";} ?>
+
+document.querySelectorAll('.btn-edit').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const section = btn.dataset.section;
+    const form = document.getElementById('form-'+section);
+    const id = btn.dataset.id;
+    form.style.display='block';
+    form.scrollIntoView({behavior:"smooth"});
+    document.getElementById(section+'-id').value=id;
+
+    const row = btn.closest('tr');
+    const inputs = form.querySelectorAll('input,textarea,select');
+    inputs.forEach(input=>{
+      const name = input.name;
+      if(row.querySelector('td')){
+        let tdValue = row.querySelector('td').innerText;
+        if(input.tagName=='TEXTAREA' || input.tagName=='INPUT'){
+          input.value = tdValue;
+        } else if(input.tagName=='SELECT'){
+          Array.from(input.options).forEach(opt=>{if(opt.value==tdValue) opt.selected=true;});
+        }
+      }
     });
+  });
 });
 </script>
 </body>
