@@ -17,3 +17,36 @@
  
 </head>
 <body>
+  <style> 
+  /* Reset básico para evitar espaçamento indesejado */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Garante que body e html ocupem toda a largura */
+html, body {
+    width: 100%;
+    overflow-x: hidden; /* remove barra de rolagem horizontal */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Container geral */
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Ajuste do nav fixo */
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+  </style>

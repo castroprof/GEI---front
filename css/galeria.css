@@ -1,0 +1,91 @@
+.galeria-section {
+  background-color: #823d2c;
+  padding: 40px 20px;
+}
+
+.galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  justify-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 10px;
+}
+
+.galeria img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.galeria img:hover {
+  transform: scale(1.03);
+}
+
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #823d2c;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.popup-img {
+  max-width: 90%;
+  max-height: 70vh;
+  border-radius: 10px;
+  margin-top: 60px;
+}
+
+.popup-description {
+  color: white;
+  font-size: 18px;
+  margin-top: 20px;
+  text-align: center;
+  max-width: 90%;
+}
+
+.popup-controls {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.popup-close,
+.popup-expand {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.popup-whatsapp {
+  margin-top: 10px;
+  background: #25d366;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  display: inline-block;
+}

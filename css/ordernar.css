@@ -1,0 +1,35 @@
+.produtos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f3ddd4; /* texto claro */
+  background: transparent; /* fundo transparente */
+  padding: 0; /* sem padding */
+}
+
+.ordenar {
+  color: #f3ddd4;
+}
+
+/* Estilo do select */
+.ordenar select {
+  background-color: #823d2c; /* fundo transparente */
+  border: 1px solid #f3ddd4; /* borda clara */
+  padding: 6px 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  color: #f3ddd4; /* texto claro */
+  cursor: pointer;
+  font-weight: 600;
+  min-width: 170px;
+  -webkit-appearance: none; /* remove estilo padrão no Safari/Chrome */
+  -moz-appearance: none; /* Firefox */
+  appearance: none; /* geral */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23f3ddd4" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}

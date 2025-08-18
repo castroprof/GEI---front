@@ -1,5 +1,4 @@
 <?php
-// Começa imediatamente com PHP — sem linhas em branco antes
 // Conexão com banco de dados
 $host = "localhost";
 $user = "root";
@@ -11,25 +10,25 @@ if ($conn->connect_error) {
     die("Erro de conexão: " . $conn->connect_error);
 }
 
-// Tabela depoimentos deve ter: id, nome, texto, foto
+// Tabela depoimentos (nome compatível com CRUD)
 $conn->query("CREATE TABLE IF NOT EXISTS depoimentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    texto TEXT NOT NULL,
-    foto VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    text TEXT NOT NULL,
+    image VARCHAR(255) NOT NULL
 )");
 
 // Inserir novo depoimento enviado via POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nome']) && isset($_POST['texto'])) {
-    $nome = $conn->real_escape_string($_POST['nome']);
-    $texto = $conn->real_escape_string($_POST['texto']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_POST['text'])) {
+    $name = $conn->real_escape_string($_POST['name']);
+    $text = $conn->real_escape_string($_POST['text']);
 
-    // Gera foto aleatória
+    // Gera imagem aleatória
     $genero = rand(0,1) ? 'men' : 'women';
     $numero = rand(0,99);
-    $foto = "https://randomuser.me/api/portraits/$genero/$numero.jpg";
+    $image = "https://randomuser.me/api/portraits/$genero/$numero.jpg";
 
-    $conn->query("INSERT INTO depoimentos (nome, texto, foto) VALUES ('$nome', '$texto', '$foto')");
+    $conn->query("INSERT INTO depoimentos (name, text, image) VALUES ('$name', '$text', '$image')");
 
     // Redireciona para evitar reenvio de form
     echo '<script>window.location.href = "' . $_SERVER['PHP_SELF'] . '";</script>';
@@ -49,10 +48,7 @@ while ($row = $result->fetch_assoc()) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Depoimentos</title>
-<link rel="stylesheet" href="css/navbar.css">
-<link rel="stylesheet" href="css/depoimentos.css">
 <style>
-/* Botão padrão do site */
 .botao {
   display: inline-block;
   padding: 12px 20px;
@@ -67,7 +63,7 @@ while ($row = $result->fetch_assoc()) {
   border: none;
 }
 .botao:hover { background-color: #422016; }
-/* Modal melhorado */
+
 #modal-depoimento {
     display:none;
     position:fixed;
@@ -101,6 +97,10 @@ while ($row = $result->fetch_assoc()) {
 #modal-depoimento h3 { margin-bottom: 20px; color: #5a2b1f; }
 #modal-depoimento button { margin-top: 10px; }
 textarea { resize: none; }
+
+.depoimento-wrapper { display:flex; align-items:center; gap:10px; justify-content:center; margin-top:20px; }
+.depoimento-card { padding:20px; text-align:center; max-width:300px; }
+.seta { cursor:pointer; font-size:24px; background:none; border:none; }
 </style>
 </head>
 <body>
@@ -119,8 +119,8 @@ textarea { resize: none; }
     <div class="modal-content">
       <h3>Adicionar Depoimento</h3>
       <form method="POST" onsubmit="return enviarDepoimento(this)">
-        <input type="text" name="nome" id="nome-depoimento" placeholder="Seu nome" required>
-        <textarea name="texto" id="texto-depoimento" placeholder="Escreva seu depoimento" required></textarea>
+        <input type="text" name="name" id="nome-depoimento" placeholder="Seu nome" required>
+        <textarea name="text" id="texto-depoimento" placeholder="Escreva seu depoimento" required></textarea>
         <button type="submit" class="botao">Enviar</button>
         <button type="button" class="botao" onclick="fecharFormulario()" style="background-color:#ccc; color:#333; margin-left:10px;">Cancelar</button>
       </form>
@@ -140,9 +140,9 @@ function mostrarDepoimento() {
   }
   const depo = depoimentos[indiceAtual];
   card.innerHTML = `
-    <img src="${depo.foto}" alt="${depo.nome}" style="width:60px; height:60px; border-radius:50%; object-fit:cover; margin-bottom:10px;">
-    <h4>${depo.nome}</h4>
-    <p>${depo.texto}</p>
+    <img src="${depo.image}" alt="${depo.name}" style="width:60px; height:60px; border-radius:50%; object-fit:cover; margin-bottom:10px;">
+    <h4>${depo.name}</h4>
+    <p>${depo.text}</p>
   `;
 }
 
@@ -160,7 +160,6 @@ function abrirFormulario() { document.getElementById('modal-depoimento').style.d
 function fecharFormulario() { document.getElementById('modal-depoimento').style.display = 'none'; }
 
 function enviarDepoimento(form) {
-  // deixa o envio normal acontecer (POST) e fecha modal
   fecharFormulario();
   return true;
 }

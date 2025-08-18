@@ -10,18 +10,6 @@ $db = "db_gei";
 $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) die("Erro de conexão: " . $conn->connect_error);
 
-// Criar tabela de likes se não existir
-$conn->query("
-  CREATE TABLE IF NOT EXISTS post_likes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    post_id INT NOT NULL,
-    ip_address VARCHAR(45) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE KEY unique_like (post_id, ip_address),
-    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
-  )
-");
-
 // Inserir comentário
 if (isset($_POST['action']) && $_POST['action'] == 'comment') {
     $post_id = intval($_POST['post_id']);
@@ -46,22 +34,9 @@ if (isset($_GET['view'])) {
 }
 
 // Processar like via Ajax
-if (isset($_POST['like']) && isset($_POST['post_id'])) {
+if (isset($_POST['like']) && isset($_POST['post_id']) && isset($_POST['ajax'])) {
     $post_id = intval($_POST['post_id']);
-    $ip = $_SERVER['REMOTE_ADDR'];
-
-    $check = $conn->prepare("SELECT id FROM post_likes WHERE post_id = ? AND ip_address = ?");
-    $check->bind_param("is", $post_id, $ip);
-    $check->execute();
-    $check->store_result();
-    if ($check->num_rows == 0) {
-        $stmt = $conn->prepare("INSERT INTO post_likes (post_id, ip_address) VALUES (?,?)");
-        $stmt->bind_param("is", $post_id, $ip);
-        $stmt->execute();
-        $stmt->close();
-        $conn->query("UPDATE posts SET likes = likes + 1 WHERE id = $post_id");
-    }
-    $check->close();
+    $conn->query("UPDATE posts SET likes = likes + 1 WHERE id = $post_id");
     $likes = $conn->query("SELECT likes FROM posts WHERE id = $post_id")->fetch_assoc()['likes'];
     echo $likes;
     exit;
@@ -155,7 +130,6 @@ if ($res->num_rows > 0) {
             ?>
         </div>
 
-        <!-- Formulário de comentário -->
         <form class="comment-form" method="POST">
             <input type="hidden" name="action" value="comment">
             <input type="hidden" name="post_id" value="<?= $post_id ?>">
@@ -174,74 +148,18 @@ if ($res->num_rows > 0) {
 </section>
 
 <style>
-.botao {
-  display: inline-block;
-  padding: 12px 20px;
-  background-color: #823d2c;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 6px;
-  font-weight: bold;
-  margin-top: 10px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-.botao:hover { background-color: #5a2b1f; }
-
-.like-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-.like-icon { stroke: #823d2c; }
-
-.modal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  backdrop-filter: blur(5px);
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.modal-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 700px;
-  max-height: 90%;
-  overflow-y: auto;
-  position: relative;
-}
-.close {
-  position: fixed;
-  top: 15px;
-  right: 20px;
-  font-size: 28px;
-  cursor: pointer;
-  background: #823d2c;
-  color: #fff;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  text-align: center;
-  line-height: 35px;
-  z-index: 1100;
-}
-.comment { display:flex; gap:10px; margin-bottom:10px; }
-.comment-avatar { width:40px; height:40px; border-radius:50%; }
-.comment-body { background:#f1f1f1; padding:8px; border-radius:5px; flex:1; }
-.comment-form input, .comment-form textarea {
-  width:100%; margin-bottom:8px; padding:8px; border-radius:5px; border:1px solid #ccc;
-}
-.search-bar input::placeholder { color: #fff; }
+.botao { display:inline-block; padding:12px 20px; background-color:#823d2c; color:#fff; border-radius:6px; font-weight:bold; margin-top:10px; border:none; cursor:pointer; transition:0.3s;}
+.botao:hover{ background-color:#5a2b1f; }
+.like-btn{ background:none; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:5px; }
+.like-icon{ stroke:#823d2c; }
+.modal{ position:fixed; top:0; left:0; width:100%; height:100%; backdrop-filter:blur(5px); background:rgba(0,0,0,0.4); display:flex; justify-content:center; align-items:center; z-index:1000;}
+.modal-content{ background:#fff; padding:20px; border-radius:8px; width:90%; max-width:700px; max-height:90%; overflow-y:auto; position:relative;}
+.close{ position:fixed; top:15px; right:20px; font-size:28px; cursor:pointer; background:#823d2c; color:#fff; border-radius:50%; width:35px; height:35px; text-align:center; line-height:35px; z-index:1100;}
+.comment{ display:flex; gap:10px; margin-bottom:10px;}
+.comment-avatar{ width:40px; height:40px; border-radius:50%;}
+.comment-body{ background:#f1f1f1; padding:8px; border-radius:5px; flex:1;}
+.comment-form input, .comment-form textarea{ width:100%; margin-bottom:8px; padding:8px; border-radius:5px; border:1px solid #ccc;}
+.search-bar input::placeholder{ color:#fff;}
 </style>
 
 <script>
@@ -268,21 +186,23 @@ document.querySelectorAll('.modal').forEach(modal => {
     });
 });
 
-// Likes
+// Likes via Ajax
 document.querySelectorAll('.like-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const post_id = btn.dataset.id;
-        const span = btn.querySelector('.like-count');
-
-        fetch('', {
+        fetch(window.location.href, {
             method: 'POST',
             headers: {'Content-Type':'application/x-www-form-urlencoded'},
-            body: 'like=1&post_id=' + post_id
+            body: 'like=1&ajax=1&post_id=' + post_id
         })
         .then(res => res.text())
-        .then(data => {
-            span.textContent = data;
-        });
+        .then(likes => {
+            // Atualiza todos os botões de like do mesmo post
+            document.querySelectorAll('.like-btn[data-id="'+post_id+'"]').forEach(b => {
+                b.querySelector('.like-count').textContent = likes;
+            });
+        })
+        .catch(err => console.error(err));
     });
 });
 </script>

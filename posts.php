@@ -21,15 +21,13 @@
     margin-bottom: 20px;
   }
   .cards {
-  overflow: hidden;
-  max-width: 960px;
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-  padding: 0 10px; /* um pequeno padding para evitar corte */
-}
-
-
+    overflow: hidden;
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    padding: 0 10px;
+  }
   .cards-track {
     display: flex;
     gap: 20px;
@@ -44,6 +42,7 @@
     text-decoration: none;
     color: #333;
     user-select: none;
+    cursor: pointer;
   }
   .card img {
     width: 100%;
@@ -77,15 +76,9 @@
     z-index: 100;
     transition: background-color 0.3s;
   }
-  .nav-btn:hover {
-    background-color: rgba(0,0,0,0.8);
-  }
-  .nav-left {
-    left: -25px;
-  }
-  .nav-right {
-    right: -25px;
-  }
+  .nav-btn:hover { background-color: rgba(0,0,0,0.8); }
+  .nav-left { left: -25px; }
+  .nav-right { right: -25px; }
 </style>
 </head>
 <body>
@@ -97,23 +90,42 @@
     <div class="cards">
       <div class="cards-track" id="cards-track">
         <?php
-          $posts = [
-            ['title' => 'FÁBIO LOPES','description' => 'Membro do GEI e Professor de Filosofia e Matemática...','image' => 'https://static.wixstatic.com/media/607130_1273c70574fa462bb1987d4012f46b31~mv2.jpg','link' => 'blog.html'],
-            ['title' => 'SOCIEDADES AFRICANAS E O...','description' => 'O Grupo de Estudos Iyamopo (GEI) desenvolve pesquisas...','image' => 'https://static.wixstatic.com/media/607130_39f26db1b9e245f7a56e911ffaddcd8e~mv2.png','link' => 'blog.html'],
-            ['title' => 'Conheça a galeria de arte do Gru...','description' => 'A galeria de arte do Grupo de Estudos Iyamopo...','image' => 'https://static.wixstatic.com/media/607130_40eecb8e897a42c5a62f87dcece163d2~mv2.png','link' => 'blog.html'],
-            ['title' => 'Outro post repetido...','description' => 'Mais conteúdo do GEI sendo exibido aqui...','image' => 'https://static.wixstatic.com/media/607130_1273c70574fa462bb1987d4012f46b31~mv2.jpg','link' => 'blog.html'],
-            ['title' => 'Mais um post...','description' => 'Descrição de outro conteúdo exemplo...','image' => 'https://static.wixstatic.com/media/607130_39f26db1b9e245f7a56e911ffaddcd8e~mv2.png','link' => 'blog.html'],
-            ['title' => 'Último post de teste...','description' => 'Aqui finalizamos os 6 posts exemplo...','image' => 'https://static.wixstatic.com/media/607130_40eecb8e897a42c5a62f87dcece163d2~mv2.png','link' => 'blog.html']
-          ];
+        // Conexão com o banco
+        $host = "localhost";
+        $user = "root";
+        $pass = "";
+        $db = "db_gei";
+        $conn = new mysqli($host, $user, $pass, $db);
+        if($conn->connect_error) die("Erro de conexão: " . $conn->connect_error);
 
-          foreach ($posts as $post) {
-            echo '<a href="'. $post['link'] .'" class="card">';
-            echo '<img src="'. $post['image'] .'" alt="'. htmlspecialchars($post['title']) .'" />';
-            echo '<div class="content">';
-            echo '<h4>'. htmlspecialchars($post['title']) .'</h4>';
-            echo '<p>'. htmlspecialchars($post['description']) .'</p>';
-            echo '</div></a>';
-          }
+        // Criar tabela posts se não existir
+        $conn->query("
+          CREATE TABLE IF NOT EXISTS posts (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            description TEXT NOT NULL,
+            image VARCHAR(255) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            likes INT DEFAULT 0,
+            views INT DEFAULT 0
+          )
+        ");
+
+        // Buscar posts
+        $res = $conn->query("SELECT * FROM posts ORDER BY created_at DESC");
+        if($res->num_rows > 0){
+            while($post = $res->fetch_assoc()){
+                $post_id = $post['id'];
+                echo '<div class="card" onclick="window.location.href=\'blog.php?view='.$post_id.'\'">';
+                echo '<img src="'. htmlspecialchars($post['image']) .'" alt="'. htmlspecialchars($post['title']) .'" />';
+                echo '<div class="content">';
+                echo '<h4>'. htmlspecialchars($post['title']) .'</h4>';
+                echo '<p>'. htmlspecialchars(substr($post['description'],0,100)) .'...</p>';
+                echo '</div></div>';
+            }
+        } else {
+            echo '<p>Nenhum post encontrado.</p>';
+        }
         ?>
       </div>
     </div>
@@ -121,59 +133,37 @@
 
 <script>
   const cardsTrack = document.getElementById('cards-track');
-let cards = Array.from(cardsTrack.children);
-const gap = 20; // px
-let cardWidth = cards[0].offsetWidth; // pega largura real do card
-let totalCards = cards.length;
-let currentIndex = 0;
+  let cards = Array.from(cardsTrack.children);
+  const gap = 20; 
+  let cardWidth = cards[0] ? cards[0].offsetWidth : 300;
+  let totalCards = cards.length;
+  let currentIndex = 0;
 
-// Função para mover o carrossel
-function updateSlide() {
-  const offset = -(cardWidth + gap) * currentIndex;
-  cardsTrack.style.transition = 'transform 0.5s ease';
-  cardsTrack.style.transform = `translateX(${offset}px)`;
-}
-
-// Função para ir para o próximo card
-function showNext() {
-  currentIndex++;
-  if(currentIndex >= totalCards) {
-    currentIndex = 0;
-    cardsTrack.style.transition = 'none'; // remove transição
-    updateSlide();
-    // força reflow para garantir que a transição será aplicada no próximo update
-    void cardsTrack.offsetWidth;
+  function updateSlide() {
+    const offset = -(cardWidth + gap) * currentIndex;
+    cardsTrack.style.transition = 'transform 0.5s ease';
+    cardsTrack.style.transform = `translateX(${offset}px)`;
   }
-  updateSlide();
-}
-
-// Função para voltar
-function showPrev() {
-  currentIndex--;
-  if(currentIndex < 0) {
-    currentIndex = totalCards - 1;
-    cardsTrack.style.transition = 'none';
+  function showNext() {
+    currentIndex++;
+    if(currentIndex >= totalCards) currentIndex = 0;
     updateSlide();
-    void cardsTrack.offsetWidth;
   }
+  function showPrev() {
+    currentIndex--;
+    if(currentIndex < 0) currentIndex = totalCards - 1;
+    updateSlide();
+  }
+  document.getElementById('btn-next').addEventListener('click', showNext);
+  document.getElementById('btn-prev').addEventListener('click', showPrev);
+
   updateSlide();
-}
-
-// Botões
-document.getElementById('btn-next').addEventListener('click', showNext);
-document.getElementById('btn-prev').addEventListener('click', showPrev);
-
-// Inicializa
-updateSlide();
-
-// Ajusta largura dos cards se a tela mudar
-window.addEventListener('resize', () => {
-  cardWidth = cards[0].offsetWidth;
-  updateSlide();
-});
-
-
+  window.addEventListener('resize', () => {
+    cards = Array.from(cardsTrack.children);
+    cardWidth = cards[0].offsetWidth;
+    totalCards = cards.length;
+    updateSlide();
+  });
 </script>
-
 </body>
 </html>

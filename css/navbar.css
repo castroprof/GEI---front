@@ -1,32 +1,14 @@
-.menu {
-  display: flex;
-  gap: 20px;
-}
-.menu a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+header {
   background-color: #823d2c;
   color: white;
-  z-index: 1000;
-  transition: top 0.3s;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
 }
-.topbar .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.logo {
-  display: flex;
-  align-items: center;
-  font-size: 16px;
+
+nav {
+  background-color: #a85b48;
+  text-align: center;
+  padding: 10px 0;
+  color: white;
 }

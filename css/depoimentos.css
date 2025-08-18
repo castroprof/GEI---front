@@ -1,0 +1,72 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f2ef;
+  color: #432417;
+}
+
+.depoimentos-section {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.depoimentos-section h2 {
+  color: #823d2c;
+  font-size: 2em;
+  margin-bottom: 40px;
+  font-weight: bold;
+}
+
+.depoimento-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.depoimento-card {
+  background-color: #fff;
+  padding: 40px 30px;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(130, 61, 44, 0.15);
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+}
+
+.depoimento-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.depoimento-card h4 {
+  font-weight: bold;
+  color: #823d2c;
+  margin: 0 0 10px;
+  font-size: 1.2em;
+}
+
+.depoimento-card p {
+  font-size: 1em;
+  color: #823d2c;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.seta {
+  font-size: 22px;
+  background: none;
+  border: none;
+  color: #823d2c;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.seta:hover {
+  transform: scale(1.2);
+}
