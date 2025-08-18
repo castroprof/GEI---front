@@ -204,11 +204,15 @@ function renderTable($table, $columns, $section){
     global $conn;
     $res = $conn->query("SELECT * FROM $table ORDER BY id DESC");
     while($row = $res->fetch_assoc()){
-        echo '<tr data-id="'.$row['id'].'">';
+        echo '<tr data-id="'.$row['id'].'"';
+        foreach($columns as $col){
+            echo ' data-'.$col.'="'.htmlspecialchars($row[$col], ENT_QUOTES, 'UTF-8').'"';
+        }
+        echo '>';
         foreach($columns as $col){
             $cell = $row[$col] ?? '';
             if(($col == 'image' || $col == 'imagem' || strpos($col,'img')===0) && !empty($cell)){
-                echo '<td><img src="'.htmlspecialchars($cell).'" style="width:80px;height:60px;object-fit:cover;border-radius:6px;"></td>';
+                echo '<td><img src="'.htmlspecialchars($cell).'" style="width:80px;height:60px;object-fit:cover;border-radius:6px;" alt="Imagem"></td>';
             } else {
                 echo '<td>'.htmlspecialchars($cell, ENT_QUOTES, 'UTF-8').'</td>';
             }
@@ -243,29 +247,21 @@ $activeSection = $_GET['section'] ?? 'posts';
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Painel Administrativo - GEI</title>
 <style>
-/* RESET E TIPOGRAFIA */
+/* --- MESMO CSS DO SEU CÓDIGO --- */
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', sans-serif;}
 body{background:#f4f6f8;color:#333;}
-
-/* NAVEGAÇÃO */
 nav{display:flex;gap:10px;padding:15px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.1);border-radius:0 0 10px 10px;flex-wrap:wrap;}
 nav button{padding:10px 16px;cursor:pointer;border-radius:8px;border:none;background:#e0e0e0;color:#333;font-weight:600;transition:0.3s;}
 nav button.active{background:#823d2c;color:#fff;box-shadow:0 4px 12px rgba(130,61,44,0.3);}
 nav button:hover{background:#d5d5d5;}
-
-/* SEÇÕES */
 .section{display:none;background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.05);margin-bottom:20px;transition:all 0.3s;}
 .section.active{display:block;}
-
-/* TABELA */
 table{width:100%;border-collapse:separate;border-spacing:0 8px;margin-top:15px;}
 th, td{padding:12px 15px;text-align:left;}
 th{background:#f0f0f0;color:#555;font-weight:600;border-radius:8px 8px 0 0;}
 tbody tr{background:#fff;transition:0.3s;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
 tbody tr:hover{background:#fef9f7;}
 td img{width:80px;height:60px;object-fit:cover;border-radius:6px;}
-
-/* BOTÕES */
 .btn{padding:8px 14px;cursor:pointer;border-radius:8px;font-weight:600;transition:0.3s;border:none;}
 .btn-primary{background:#28a745;color:#fff;}
 .btn-primary:hover{background:#218838;}
@@ -273,18 +269,12 @@ td img{width:80px;height:60px;object-fit:cover;border-radius:6px;}
 .btn-secondary:hover{background:#e0a800;}
 .btn-danger{background:#dc3545;color:#fff;}
 .btn-danger:hover{background:#a71d2a;transform:translateY(-2px);}
-
-/* FORMULÁRIOS */
 form{margin-top:15px;background:#f9f9f9;padding:20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
 form label{display:block;margin-bottom:6px;font-weight:600;color:#555;}
 form input, form textarea, form select{width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;margin-bottom:12px;transition:0.3s;}
 form input:focus, form textarea:focus, form select:focus{border-color:#823d2c;outline:none;background:#fff;}
 form textarea{resize:vertical;min-height:80px;}
-
-/* Preview de imagem */
 img.preview{width:150px;height:100px;object-fit:cover;border-radius:8px;margin-top:8px;display:none;}
-
-/* Categoria nova */
 #new-category-container{display:none;margin-bottom:12px;}
 </style>
 </head>
@@ -300,43 +290,46 @@ img.preview{width:150px;height:100px;object-fit:cover;border-radius:8px;margin-t
 <?php
 foreach($secoes as $sec=>$cols){
     echo '<section id="'.$sec.'" class="section '.($sec==$activeSection?'active':'').'">';
-    echo '<button id="btn-add-'.$sec.'" class="btn btn-primary">Adicionar</button>';
+    echo '<button id="btn-add-'.$sec.'" class="btn btn-primary">Adicionar '.ucfirst(str_replace('_',' ',$sec)).'</button>';
     echo '<form id="form-'.$sec.'" style="display:none;" method="POST" enctype="multipart/form-data">';
     echo '<input type="hidden" name="id" id="'.$sec.'-id">';
     echo '<input type="hidden" name="action" value="save">';
     echo '<input type="hidden" name="section" value="'.$sec.'">';
-    
+
     if($sec == 'sobre_nos'){
-        echo '<label>Texto 1</label><textarea name="text1" required></textarea>';
-        echo '<label>Texto 2</label><textarea name="text2" required></textarea>';
+        echo '<label>Texto principal</label><textarea name="text1" placeholder="Digite o texto principal" required></textarea>';
+        echo '<label>Texto secundário</label><textarea name="text2" placeholder="Digite o texto secundário" required></textarea>';
         for($i=1;$i<=4;$i++){
             echo '<label>Imagem '.$i.'</label>';
             echo '<input type="file" name="img'.$i.'">';
             echo '<input type="hidden" name="img'.$i.'_old">';
-            echo '<img src="" class="preview">';
+            echo '<img src="" class="preview" alt="Pré-visualização da imagem '.$i.'">';
         }
     } else {
         foreach($cols as $col){
             $label = ucfirst(str_replace('_',' ',$col));
-            echo '<label>'.$label.'</label>';
             if($col == 'image' || $col == 'imagem'){
+                echo '<label>'.$label.'</label>';
                 echo '<input type="file" name="'.$col.'">';
                 echo '<input type="hidden" name="'.$col.'_old">';
-                echo '<img src="" class="preview">';
+                echo '<img src="" class="preview" alt="Pré-visualização de '.$label.'">';
             } elseif($col=='description' || $col=='text' || $col=='descricao'){
-                echo '<textarea name="'.$col.'" required></textarea>';
+                echo '<label>'.$label.'</label>';
+                echo '<textarea name="'.$col.'" placeholder="Digite '.$label.'" required></textarea>';
             } elseif($col=='category'){
                 $resCat = $conn->query("SELECT DISTINCT category FROM produtos");
+                echo '<label>Categoria</label>';
                 echo '<select name="category">';
-                echo '<option value="">-- Selecione a categoria --</option>';
+                echo '<option value="">-- Selecione uma categoria --</option>';
                 while($cat = $resCat->fetch_assoc()){
                     echo '<option value="'.$cat['category'].'">'.$cat['category'].'</option>';
                 }
                 echo '<option value="add_new">Adicionar nova categoria</option>';
                 echo '</select>';
-                echo '<div id="new-category-container"><input type="text" name="new_category" placeholder="Digite nova categoria"></div>';
+                echo '<div id="new-category-container"><input type="text" name="new_category" placeholder="Digite o nome da nova categoria"></div>';
             } else {
-                echo '<input type="text" name="'.$col.'" required>';
+                echo '<label>'.$label.'</label>';
+                echo '<input type="text" name="'.$col.'" placeholder="Digite '.$label.'" required>';
             }
         }
     }
@@ -346,80 +339,96 @@ foreach($secoes as $sec=>$cols){
     echo '</form>';
 
     echo '<table><thead><tr>';
-    foreach($cols as $col) echo '<th>'.ucfirst(str_replace('_',' ',$col)).'</th>';
+    foreach($cols as $col){
+        $colLabel = ucfirst(str_replace('_',' ',$col));
+        echo '<th>'.$colLabel.'</th>';
+    }
     echo '<th>Ações</th></tr></thead><tbody>';
     renderTable($sec,$cols,$sec);
     echo '</tbody></table>';
     echo '</section>';
 }
 ?>
+</main>
+
 <script>
+// Troca de abas
 document.querySelectorAll('nav button').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-    document.getElementById(btn.dataset.section).classList.add('active');
-    btn.classList.add('active');
-  });
+    btn.addEventListener('click',()=>{
+        document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+        document.getElementById(btn.dataset.section).classList.add('active');
+        btn.classList.add('active');
+    });
 });
 
-function setupForm(section){
-  const btnAdd = document.getElementById('btn-add-'+section);
-  const form = document.getElementById('form-'+section);
-  const cancel = form.querySelector('.cancel-btn');
-  btnAdd.addEventListener('click',()=>{
-    form.style.display='block';
-    form.scrollIntoView({behavior:"smooth"});
-    form.reset();
-    form.querySelectorAll('.preview').forEach(p=>p.style.display='none');
-  });
-  cancel.addEventListener('click',()=>{form.style.display='none';});
+// Mostrar formulário
+document.querySelectorAll('[id^="btn-add-"]').forEach(btn=>{
+    btn.addEventListener('click',()=> {
+        const sec = btn.id.replace('btn-add-','');
+        const form = document.getElementById('form-'+sec);
+        form.style.display = form.style.display=='block'?'none':'block';
+        if(form.style.display=='block') form.reset();
+        form.querySelectorAll('img.preview').forEach(img=>img.style.display='none');
+    });
+});
 
-  form.querySelectorAll('input[type=file]').forEach(input=>{
+// Cancelar formulário
+document.querySelectorAll('.cancel-btn').forEach(btn=>{
+    btn.addEventListener('click',()=> btn.closest('form').style.display='none');
+});
+
+// Preview imagem
+document.querySelectorAll('input[type=file]').forEach(input=>{
     input.addEventListener('change',e=>{
-      const file = e.target.files[0];
-      if(file){
-        const preview = input.parentElement.querySelector('.preview');
-        preview.src = URL.createObjectURL(file);
-        preview.style.display='block';
-      }
-    });
-  });
-
-  form.querySelectorAll('select[name=category]').forEach(sel=>{
-    sel.addEventListener('change',()=>{
-      const container = form.querySelector('#new-category-container');
-      if(sel.value=='add_new'){container.style.display='block';}else{container.style.display='none';}
-    });
-  });
-}
-
-<?php foreach($secoes as $sec=>$cols){echo "setupForm('$sec');";} ?>
-
-document.querySelectorAll('.btn-edit').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const section = btn.dataset.section;
-    const form = document.getElementById('form-'+section);
-    const id = btn.dataset.id;
-    form.style.display='block';
-    form.scrollIntoView({behavior:"smooth"});
-    document.getElementById(section+'-id').value=id;
-
-    const row = btn.closest('tr');
-    const inputs = form.querySelectorAll('input,textarea,select');
-    inputs.forEach(input=>{
-      const name = input.name;
-      if(row.querySelector('td')){
-        let tdValue = row.querySelector('td').innerText;
-        if(input.tagName=='TEXTAREA' || input.tagName=='INPUT'){
-          input.value = tdValue;
-        } else if(input.tagName=='SELECT'){
-          Array.from(input.options).forEach(opt=>{if(opt.value==tdValue) opt.selected=true;});
+        const preview = input.nextElementSibling;
+        if(preview && preview.tagName=='IMG'){
+            preview.src = URL.createObjectURL(input.files[0]);
+            preview.style.display='block';
         }
-      }
     });
-  });
+});
+
+// Categoria nova
+document.querySelectorAll('select[name=category]').forEach(sel=>{
+    sel.addEventListener('change',()=>{
+        const container = sel.nextElementSibling;
+        if(sel.value=='add_new'){ container.style.display='block'; }
+        else { container.style.display='none'; }
+    });
+});
+
+// BOTÃO EDITAR
+document.querySelectorAll('.btn-edit').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+        const tr = btn.closest('tr');
+        const sec = btn.dataset.section;
+        const form = document.getElementById('form-'+sec);
+        form.style.display='block';
+        form.reset();
+
+        form.querySelector('input[name=id]').value = tr.dataset.id;
+
+        // Preenche os campos
+        Object.keys(tr.dataset).forEach(key=>{
+            const field = form.querySelector('[name="'+key+'"]');
+            if(!field) return;
+            if(field.tagName=='TEXTAREA' || field.tagName=='INPUT' && field.type=='text') field.value = tr.dataset[key];
+            if(field.tagName=='SELECT') field.value = tr.dataset[key];
+            if(field.type=='hidden' && (key.includes('img') || key=='image' || key=='imagem')) field.value = tr.dataset[key];
+        });
+
+        // Atualiza preview de imagem
+        form.querySelectorAll('img.preview').forEach(img=>{
+            const hidden = form.querySelector('[name="'+img.previousElementSibling.name+'_old"]');
+            if(hidden && hidden.value){
+                img.src = hidden.value;
+                img.style.display = 'block';
+            }
+        });
+    });
 });
 </script>
+
 </body>
 </html>
